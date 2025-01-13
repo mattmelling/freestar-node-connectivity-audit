@@ -72,3 +72,5 @@ dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
 
 dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4
 	m4 -D NODEDB=nodes.db < templates/index.html.m4 > $@
+
+report: dist/index.html node-pages
