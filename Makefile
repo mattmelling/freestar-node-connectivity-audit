@@ -41,6 +41,7 @@ dist/nodes-by-status.png: nodes-by-status.csv gnuplot/nodes-by-status.gnuplot
 # Node connectivity charts
 #
 
+.PRECIOUS: dist/node-connectivity-%.png
 dist/node-connectivity-%.png: node-connectivity-%.gnuplot node-connectivity-%.csv
 	mkdir -p dist && gnuplot < node-connectivity-$*.gnuplot && mv node-connectivity-$*.png $@
 
