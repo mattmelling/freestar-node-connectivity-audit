@@ -48,8 +48,17 @@ link-count-all.csv: sql/link-count-all.sql
 	sqlite3 -csv $(NODEDB) < sql/link-count-all.sql > $@
 
 dist/link-count-all.png: gnuplot/link-count-all.gnuplot link-count-all.csv
+	mkdir -p dist
 	gnuplot < gnuplot/link-count-all.gnuplot
-	mkdir -p dist && mv link-count-all.png $@
+	mv link-count-all.png $@
+
+link-count-%.gnuplot: gnuplot/link-count.gnuplot.m4
+	m4 -D NODE=$* < gnuplot/link-count.gnuplot.m4 > $@
+
+dist/link-count-%.png: link-count-%.gnuplot link-count-%.csv
+	mkdir -p dist
+	gnuplot < link-count-$*.gnuplot
+	mv link-count-$*.png $@
 
 #
 # Top level charts
@@ -65,7 +74,8 @@ nodes-by-status.csv: sql/nodes-by-status.sql
 	sqlite3 -csv $(NODEDB) < $^ > $@
 
 dist/nodes-by-status.png: nodes-by-status.csv gnuplot/nodes-by-status.gnuplot
-	mkdir -p dist && gnuplot < gnuplot/nodes-by-status.gnuplot
+	mkdir -p dist
+	gnuplot < gnuplot/nodes-by-status.gnuplot
 
 #
 # Node connectivity charts
@@ -73,7 +83,9 @@ dist/nodes-by-status.png: nodes-by-status.csv gnuplot/nodes-by-status.gnuplot
 
 .PRECIOUS: dist/node-connectivity-%.png
 dist/node-connectivity-%.png: node-connectivity-%.gnuplot node-connectivity-%.csv
-	mkdir -p dist && gnuplot < node-connectivity-$*.gnuplot && mv node-connectivity-$*.png $@
+	mkdir -p dist
+	gnuplot < node-connectivity-$*.gnuplot
+	mv node-connectivity-$*.png $@
 
 node-connectivity-%.csv: node-connectivity-%.sql
 	sqlite3 -csv nodes.db < node-connectivity-$*.sql > $@
@@ -92,13 +104,14 @@ node-connectivity-%.gnuplot: gnuplot/node-connectivity.gnuplot.m4
 node-pages: $(foreach node,$(shell sqlite3 $(NODEDB) "select id from nodes;"),dist/node-$(node).html)
 
 dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
+	mkdir -p dist
 	m4 -D NODE_ID=$* -D NODEDB="$(NODEDB)" < templates/node.html.m4 > $@
 
 #
 # Index page
 #
 
-dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/link-count-all.png
+dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/link-count-all.png $(foreach node,$(NODES),dist/link-count-$(node).png) 
 	m4 -D NODEDB="$(NODEDB)" -D NODES="$(NODES)" < templates/index.html.m4 > $@
 
 .PHONY: report

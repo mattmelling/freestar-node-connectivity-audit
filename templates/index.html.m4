@@ -14,6 +14,11 @@ define(ALL_NODES, esyscmd(./nodelist.sh))
      <img src="link-count-all.png" />
      <img src="nodes-count.png" />
 </div>
+<div style="text-align: center">
+     <img src="link-count-2167.png" />
+     <img src="link-count-2196.png" />
+     <img src="link-count-63061.png" />
+</div>
 <h2>Gateway & Repeater Nodes by Status</h2>
 <div style="text-align: center">
      <img src="nodes-by-status.png" />
