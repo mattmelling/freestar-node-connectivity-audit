@@ -1,2 +1,7 @@
-  </body>
+define(GIT_REV, esyscmd(git rev-parse --short HEAD))
+define(GENERATED_TS, esyscmd(`date +"%Y-%m-%d %H:%M"'))
+<div>
+  <small>src GIT_REV generated GENERATED_TS</small>
+</div>
+</body>
 </html>
