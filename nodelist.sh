@@ -8,7 +8,7 @@ format_value () {
     fi
 }
 
-sqlite3 nodes.db "select id, callsign from nodes;" > nodes.txt
+sqlite3 nodes.db "select id, callsign from nodes order by callsign asc;" > nodes.txt
 while read l; do
     p=(${l//|/ })
 
