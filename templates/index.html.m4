@@ -6,7 +6,7 @@ define(ALL_NODES, esyscmd(./nodelist.sh))
 
 <h1>FreeSTAR Repeater & Gateway Connectivity Report</h1>
 <div>
-  <p>This tool has observed <strong>TOTAL_NODES</strong> repeaters and gateways connected to FreeSTAR.</p>
+  <p>This tool has observed <strong>TOTAL_NODES</strong> repeaters and gateways connected to FreeSTAR through these nodes: <strong>NODES</strong></p>
   <p>Of those, <strong>GOOD_NODES</strong> nodes appear to currently allow incoming connections while <strong>BAD_NODES</strong> do not.</p> 
 </div>
 <h2>Total Gateway & Repeater Node Connections</h2>
