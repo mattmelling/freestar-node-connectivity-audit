@@ -1,3 +1,7 @@
+divert(-1)
+define(CALLSIGN, translit(esyscmd(sqlite3 NODEDB "select callsign from nodes where id = NODE_ID;"), `
+', `'))
+divert(0)dnl
 set terminal pngcairo size 800,600
 set output 'node-connectivity-NODE_ID.png'
 set title 'Connectivity Report for CALLSIGN (NODE_ID)'

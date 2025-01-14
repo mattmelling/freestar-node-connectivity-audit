@@ -52,9 +52,7 @@ node-connectivity-%.sql: sql/node-connectivity.sql.m4
 	m4 -D NODE_ID=$* < sql/node-connectivity.sql.m4 > node-connectivity-$*.sql
 
 node-connectivity-%.gnuplot: gnuplot/node-connectivity.gnuplot.m4
-	m4 -D CALLSIGN=$(shell sqlite3 $(NODEDB) "select callsign from nodes where id = $*;") \
-	   -D NODE_ID=$* \
-	< gnuplot/node-connectivity.gnuplot.m4 > $@
+	m4 -D NODEDB="$(NODEDB)" -D NODE_ID=$* < gnuplot/node-connectivity.gnuplot.m4 > $@
 
 #
 # Node pages
@@ -63,9 +61,7 @@ node-connectivity-%.gnuplot: gnuplot/node-connectivity.gnuplot.m4
 node-pages: $(foreach node,$(shell sqlite3 $(NODEDB) "select id from nodes;"),dist/node-$(node).html)
 
 dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
-	m4 -D CALLSIGN=$(shell sqlite3 $(NODEDB) "select callsign from nodes where id = $*;") \
-	   -D NODE_ID=$* \
-	< templates/node.html.m4 > $@
+	m4 -D NODE_ID=$* -D NODEDB="$(NODEDB)" < templates/node.html.m4 > $@
 
 #
 # Index page
