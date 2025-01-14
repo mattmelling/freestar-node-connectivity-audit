@@ -24,6 +24,7 @@ links-%.txt: node-%.json
 	jq -r '.stats .data .linkedNodes | .[] | "\(.name),\(.callsign)"' < node-$*.json > $@
 
 # Perform audit
+.PHONY: audit
 audit: audit.csv
 	./update-db.sh audit.csv | sqlite3 nodes.db
 
@@ -34,6 +35,7 @@ audit: audit.csv
 count-%: links-%.txt
 	./node-count-links.sh $*
 
+.PHONY: count
 count: $(foreach node,$(NODES),count-$(node))
 
 #
@@ -73,6 +75,7 @@ node-connectivity-%.gnuplot: gnuplot/node-connectivity.gnuplot.m4
 # Node pages
 #
 
+.PHONY: node-pages
 node-pages: $(foreach node,$(shell sqlite3 $(NODEDB) "select id from nodes;"),dist/node-$(node).html)
 
 dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
@@ -85,4 +88,5 @@ dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
 dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4
 	m4 -D NODEDB="$(NODEDB)" -D NODES="$(NODES)" < templates/index.html.m4 > $@
 
+.PHONY: report
 report: dist/index.html node-pages
