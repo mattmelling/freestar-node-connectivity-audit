@@ -2,7 +2,7 @@ NODES := 2196 2167 63061
 NODEDB := nodes.db
 
 clean:
-	rm -rf *.csv *.json links.txt nodes.txt dist
+	rm -rf dist links-*.txt node-*.json audit-*.csv audit.csv
 
 #
 # Node auditing
@@ -11,15 +11,30 @@ clean:
 nodes.db: schema.sql
 	sqlite3 $(NODEDB) < schema.sql
 
-audit.csv: $(foreach node,$(NODES),audit-$(node).csv) # hubs.csv
+audit.csv: $(foreach node,$(NODES),audit-$(node).csv)
 	cat $^ >> $@
 
 audit-%.csv:
 	./audit-node.sh $* > $@
 
+node-%.json:
+	curl -s "https://stats.allstarlink.org/api/stats/$*" > $@
+
+links-%.txt: node-%.json
+	jq -r '.stats .data .linkedNodes | .[] | "\(.name),\(.callsign)"' < node-$*.json > $@
+
 # Perform audit
 audit: audit.csv
 	./update-db.sh audit.csv | sqlite3 nodes.db
+
+#
+# Node counts
+#
+
+count-%: links-%.txt
+	./node-count-links.sh $*
+
+count: $(foreach node,$(NODES),count-$(node))
 
 #
 # Top level charts
