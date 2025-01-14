@@ -2,7 +2,7 @@ NODES := 2196 2167 63061
 NODEDB := nodes.db
 
 clean:
-	rm -rf dist links-*.txt node-*.json audit-*.csv audit.csv
+	rm -rf dist *.csv links-*.txt node-*.json
 
 #
 # Node auditing
