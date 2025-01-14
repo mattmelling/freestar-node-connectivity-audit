@@ -20,7 +20,7 @@ while read l; do
     cat <<EOF
 <tr>
   <td><a href="node-$id.html">$callsign</a></td>
-  <td>$id</td>
+  <td><a href="http://stats.allstarlink.org/stats/$id">$id</a></td>
   <td>$(format_value $latest)</td>
 </tr>
 EOF
