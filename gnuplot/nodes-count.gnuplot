@@ -1,13 +1,12 @@
-set terminal pngcairo size 800,600
+set terminal pngcairo size 640,480
 set output 'dist/nodes-count.png'
-set title 'Nodes count'
+set title 'Repeater and Gateway Node Links'
 
 set xlabel 'Time'
 set timefmt '%Y-%m-%d %H:%M:%S'
 set xdata time
 
 set ylabel 'Count'
-set ytics 1
 set yrange [0:*]
 
 set style line 1 lc rgb '#0000ff' lt 1 lw 2 pt 7 pi -1 ps 1.5

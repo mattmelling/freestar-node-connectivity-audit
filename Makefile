@@ -14,7 +14,7 @@ nodes.db: schema.sql
 audit.csv: $(foreach node,$(NODES),audit-$(node).csv)
 	cat $^ >> $@
 
-audit-%.csv:
+audit-%.csv: links-%.txt
 	./audit-node.sh $* > $@
 
 node-%.json:
@@ -37,6 +37,19 @@ count-%: links-%.txt
 
 .PHONY: count
 count: $(foreach node,$(NODES),count-$(node))
+
+link-count-%.sql: sql/link-count.sql.m4
+	m4 -D NODE=$* < sql/link-count.sql.m4 > $@
+
+link-count-%.csv: link-count-%.sql
+	sqlite3 -csv $(NODEDB) < link-count-$*.sql > $@
+
+link-count-all.csv: sql/link-count-all.sql
+	sqlite3 -csv $(NODEDB) < sql/link-count-all.sql > $@
+
+dist/link-count-all.png: gnuplot/link-count-all.gnuplot link-count-all.csv
+	gnuplot < gnuplot/link-count-all.gnuplot
+	mkdir -p dist && mv link-count-all.png $@
 
 #
 # Top level charts
@@ -85,7 +98,7 @@ dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
 # Index page
 #
 
-dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4
+dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/link-count-all.png
 	m4 -D NODEDB="$(NODEDB)" -D NODES="$(NODES)" < templates/index.html.m4 > $@
 
 .PHONY: report

@@ -7,7 +7,6 @@ set timefmt '%Y-%m-%d %H:%M:%S'
 set xdata time
 
 set ylabel 'Count'
-set ytics 1
 set yrange [0:*]
 
 set style line 1 lc rgb '#00ff00' lt 1 lw 2 pt 7 pi -1 ps 1.5
