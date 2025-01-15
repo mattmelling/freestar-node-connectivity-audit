@@ -41,10 +41,10 @@ count: $(foreach node,$(NODES),count-$(node))
 link-count-%.sql: sql/link-count.sql.m4
 	m4 -D NODE=$* < sql/link-count.sql.m4 > $@
 
-all-node-link-count.csv: sql/all-node-link-count.sql
+all-node-link-count.csv: sql/all-node-link-count.sql $(NODEDB)
 	sqlite3 -csv $(NODEDB) < sql/all-node-link-count.sql > $@
 
-link-count-%.csv: link-count-%.sql
+link-count-%.csv: link-count-%.sql $(NODEDB)
 	sqlite3 -csv $(NODEDB) < link-count-$*.sql > $@
 
 dist/all-node-link-count.png: gnuplot/all-node-link-count.gnuplot all-node-link-count.csv
@@ -70,8 +70,8 @@ nodes-count.csv: sql/nodes-count.sql
 dist/nodes-count.png: nodes-count.csv gnuplot/nodes-count.gnuplot
 	mkdir -p dist && gnuplot < gnuplot/nodes-count.gnuplot
 
-nodes-by-status.csv: sql/nodes-by-status.sql
-	sqlite3 -csv $(NODEDB) < $^ > $@
+nodes-by-status.csv: sql/nodes-by-status.sql $(NODEDB)
+	sqlite3 -csv $(NODEDB) < sql/nodes-by-status.sql > $@
 
 dist/nodes-by-status.png: nodes-by-status.csv gnuplot/nodes-by-status.gnuplot
 	mkdir -p dist
@@ -87,7 +87,7 @@ dist/node-connectivity-%.png: node-connectivity-%.gnuplot node-connectivity-%.cs
 	gnuplot < node-connectivity-$*.gnuplot
 	mv node-connectivity-$*.png $@
 
-node-connectivity-%.csv: node-connectivity-%.sql
+node-connectivity-%.csv: node-connectivity-%.sql $(NODEDB)
 	sqlite3 -csv nodes.db < node-connectivity-$*.sql > $@
 
 node-connectivity-%.sql: sql/node-connectivity.sql.m4
@@ -111,7 +111,7 @@ dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
 # Index page
 #
 
-dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/all-node-link-count.png $(foreach node,$(NODES),dist/link-count-$(node).png) 
+dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/all-node-link-count.png $(foreach node,$(NODES),dist/link-count-$(node).png) $(NODEDB) 
 	m4 -D NODEDB="$(NODEDB)" -D NODES="$(NODES)" < templates/index.html.m4 > $@
 
 .PHONY: report

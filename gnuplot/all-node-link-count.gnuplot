@@ -12,4 +12,4 @@ set yrange [0:*]
 set style line 1 lc rgb '#ff00ff' lt 1 lw 2 pt 7 pi -1 ps 1
 
 set datafile separator ","
-plot 'all-node-link-count.csv' using 1:2 title 'Links' with linespoints ls 1
+plot 'all-node-link-count.csv' using 1:2 title 'Links' with lines ls 1
