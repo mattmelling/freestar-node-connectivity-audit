@@ -2,7 +2,7 @@ NODES := 2196 2167 63061
 NODEDB := nodes.db
 
 clean:
-	rm -rf dist *.csv links-*.txt node-*.json
+	rm -rf dist *.csv links-*.txt node-*.json *.png
 
 #
 # Node auditing
@@ -41,16 +41,16 @@ count: $(foreach node,$(NODES),count-$(node))
 link-count-%.sql: sql/link-count.sql.m4
 	m4 -D NODE=$* < sql/link-count.sql.m4 > $@
 
+all-node-link-count.csv: sql/all-node-link-count.sql
+	sqlite3 -csv $(NODEDB) < sql/all-node-link-count.sql > $@
+
 link-count-%.csv: link-count-%.sql
 	sqlite3 -csv $(NODEDB) < link-count-$*.sql > $@
 
-link-count-all.csv: sql/link-count-all.sql
-	sqlite3 -csv $(NODEDB) < sql/link-count-all.sql > $@
-
-dist/link-count-all.png: gnuplot/link-count-all.gnuplot link-count-all.csv
+dist/all-node-link-count.png: gnuplot/all-node-link-count.gnuplot all-node-link-count.csv
 	mkdir -p dist
-	gnuplot < gnuplot/link-count-all.gnuplot
-	mv link-count-all.png $@
+	gnuplot < gnuplot/all-node-link-count.gnuplot
+	mv all-node-link-count.png $@
 
 link-count-%.gnuplot: gnuplot/link-count.gnuplot.m4
 	m4 -D NODE=$* < gnuplot/link-count.gnuplot.m4 > $@
@@ -111,7 +111,7 @@ dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
 # Index page
 #
 
-dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/link-count-all.png $(foreach node,$(NODES),dist/link-count-$(node).png) 
+dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/all-node-link-count.png $(foreach node,$(NODES),dist/link-count-$(node).png) 
 	m4 -D NODEDB="$(NODEDB)" -D NODES="$(NODES)" < templates/index.html.m4 > $@
 
 .PHONY: report
