@@ -1,6 +1,7 @@
+define(CALLSIGN, esyscmd(sqlite3 NODEDB "select callsign from nodes where id = NODE_ID;"))
+define(TITLE, FreeSTAR Repeater & Gateway Connectivity Report - CALLSIGN (NODE_ID))
 include(templates/header.html)
 define(NODE_LINK, <a href="http://stats.allstarlink.org/stats/NODE_ID">NODE_ID</a>)
-define(CALLSIGN, esyscmd(sqlite3 NODEDB "select callsign from nodes where id = NODE_ID;"))
 <h1>Connectivity Report for CALLSIGN (NODE_LINK)</h1>
 <div style="text-align: center">
   <img src="node-connectivity-NODE_ID.png" />

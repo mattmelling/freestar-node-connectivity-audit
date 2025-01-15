@@ -1,3 +1,4 @@
+define(TITLE, FreeSTAR Repeater & Gateway Connectivity Report)
 include(templates/header.html)
 define(TOTAL_NODES, esyscmd(sqlite3 NODEDB "select count(*) from nodes;"))
 define(GOOD_NODES, esyscmd(sqlite3 NODEDB "select count(callsign) from nodes where (select status from measurements where rnode = nodes.id order by timestamp desc limit 1) = 1;"))
