@@ -4,7 +4,7 @@ while read l; do
     p=(${l//,/ })
 
     timestamp=${p[0]}
-    timestamp=$(($timestamp - ($timestamp % 86400)))
+    timestamp=$(($timestamp - ($timestamp % 3600)))
 
     lnode=${p[1]}
 
