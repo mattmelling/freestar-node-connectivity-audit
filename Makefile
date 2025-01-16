@@ -1,4 +1,4 @@
-NODES := 2196 2167 63061
+NODES := 2196 2167 63061 639760
 NODEDB := nodes.db
 
 clean:
@@ -111,7 +111,13 @@ dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
 # Index page
 #
 
-dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/all-node-link-count.png $(foreach node,$(NODES),dist/link-count-$(node).png) $(NODEDB) 
+all_nodelist.html:
+	./nodelist.sh > $@
+
+freestar_nodelist.html:
+	NODES="$(NODES)" ./freestar-nodelist.html > $@
+
+dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/all-node-link-count.png $(foreach node,$(NODES),dist/link-count-$(node).png) $(NODEDB) all_nodelist.html freestar_nodelist.html
 	m4 -D NODEDB="$(NODEDB)" -D NODES="$(NODES)" < templates/index.html.m4 > $@
 
 .PHONY: report
