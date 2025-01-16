@@ -68,7 +68,9 @@ nodes-count.csv: sql/nodes-count.sql
 	sqlite3 -csv $(NODEDB) < $^ > $@
 
 dist/nodes-count.png: nodes-count.csv gnuplot/nodes-count.gnuplot
-	mkdir -p dist && gnuplot < gnuplot/nodes-count.gnuplot
+	mkdir -p dist
+	gnuplot < gnuplot/nodes-count.gnuplot
+	mv nodes-count.png $@
 
 nodes-by-status.csv: sql/nodes-by-status.sql $(NODEDB)
 	sqlite3 -csv $(NODEDB) < sql/nodes-by-status.sql > $@
