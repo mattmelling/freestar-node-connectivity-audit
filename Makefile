@@ -62,7 +62,7 @@ dist/node-links.png: node-links.gnuplot all-node-link-count.csv $(foreach node,$
 # Top level charts
 #
 
-nodes-count.csv: sql/nodes-count.sql
+nodes-count.csv: sql/nodes-count.sql $(NODEDB)
 	sqlite3 -csv $(NODEDB) < $^ > $@
 
 dist/nodes-count.png: nodes-count.csv gnuplot/nodes-count.gnuplot
