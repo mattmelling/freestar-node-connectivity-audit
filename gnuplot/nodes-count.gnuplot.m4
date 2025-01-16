@@ -15,4 +15,5 @@ set yrange [0:*]
 set key left bottom box opaque font ",10"
 
 set datafile separator ","
-plot 'nodes-count.csv' using 1:2 title 'Count' with lines ls 1
+plot 'nodes-count.csv' using 1:2 title 'Count' with lines ls 1, \
+syscmd(cat nodes-count-lines.gnuplot)

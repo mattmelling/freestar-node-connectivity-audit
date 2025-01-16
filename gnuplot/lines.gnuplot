@@ -1,0 +1,8 @@
+set style line 1 lw 2 lt 1 lc rgb '#003a7d'
+set style line 2 lw 2 lt 1 lc rgb '#ff73b6'
+set style line 3 lw 2 lt 1 lc rgb '#c701ff'
+set style line 4lw 2 lt 1 lc rgb '#4ecb8d'
+set style line 5 lw 2 lt 1 lc rgb '#008dff'
+set style line 6 lw 2 lt 1 lc rgb '#ff9d3a'
+set style line 7 lw 2 lt 1 lc rgb '#f9e858'
+set style line 8 lw 2 lt 1 lc rgb '#d83034'

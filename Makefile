@@ -2,7 +2,7 @@ NODES := 2196 2167 63061 639760
 NODEDB := nodes.db
 
 clean:
-	rm -rf dist *.csv links-*.txt node-*.json *.png
+	rm -rf dist *.csv links-*.txt node-*.json *.png *.html *.gnuplot
 
 #
 # Node auditing
@@ -48,7 +48,7 @@ link-count-%.csv: link-count-%.sql $(NODEDB)
 	sqlite3 -csv $(NODEDB) < link-count-$*.sql > $@
 
 node-links-lines.gnuplot: freestar-nodes-lines.sh
-	NODES="$(NODES)" ./freestar-nodes-lines.sh > $@
+	NODES="$(NODES)" ./freestar-nodes-lines.sh link-count > $@
 
 node-links.gnuplot: gnuplot/node-links.gnuplot.m4 node-links-lines.gnuplot
 	m4 < gnuplot/node-links.gnuplot.m4 > $@
@@ -63,11 +63,23 @@ dist/node-links.png: node-links.gnuplot all-node-link-count.csv $(foreach node,$
 #
 
 nodes-count.csv: sql/nodes-count.sql $(NODEDB)
-	sqlite3 -csv $(NODEDB) < $^ > $@
+	sqlite3 -csv $(NODEDB) < sql/nodes-count.sql > $@
 
-dist/nodes-count.png: nodes-count.csv gnuplot/nodes-count.gnuplot
+nodes-count-%.sql: sql/nodes-count-by-lnode.sql.m4
+	m4 -D NODE_ID=$* < sql/nodes-count-by-lnode.sql.m4 > $@
+
+nodes-count-%.csv: nodes-count-%.sql $(NODEDB)
+	sqlite3 -csv $(NODEDB) < nodes-count-$*.sql > $@
+
+nodes-count-lines.gnuplot: freestar-nodes-lines.sh
+	NODES="$(NODES)" ./freestar-nodes-lines.sh nodes-count > $@
+
+nodes-count.gnuplot: gnuplot/nodes-count.gnuplot.m4
+	m4 < gnuplot/nodes-count.gnuplot.m4 > nodes-count.gnuplot
+
+dist/nodes-count.png: nodes-count.csv nodes-count.gnuplot $(foreach node,$(NODES),nodes-count-$(node).csv)
 	mkdir -p dist
-	gnuplot < gnuplot/nodes-count.gnuplot
+	gnuplot < nodes-count.gnuplot
 	mv nodes-count.png $@
 
 nodes-by-status.csv: sql/nodes-by-status.sql $(NODEDB)
