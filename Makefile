@@ -74,7 +74,7 @@ nodes-count-%.csv: nodes-count-%.sql $(NODEDB)
 nodes-count-lines.gnuplot: freestar-nodes-lines.sh
 	NODES="$(NODES)" ./freestar-nodes-lines.sh nodes-count > $@
 
-nodes-count.gnuplot: gnuplot/nodes-count.gnuplot.m4
+nodes-count.gnuplot: gnuplot/nodes-count.gnuplot.m4 nodes-count-lines.gnuplot
 	m4 < gnuplot/nodes-count.gnuplot.m4 > nodes-count.gnuplot
 
 dist/nodes-count.png: nodes-count.csv nodes-count.gnuplot $(foreach node,$(NODES),nodes-count-$(node).csv)
