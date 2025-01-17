@@ -8,22 +8,25 @@ format_value () {
     fi
 }
 
-sqlite3 nodes.db "select id, callsign from nodes order by callsign asc;" > nodes.txt
+sqlite3 nodes.db "select id, callsign, inbound_excluded from nodes order by callsign asc;" > nodes.txt
 while read l; do
     p=(${l//|/ })
 
     id=${p[0]}
     callsign=${p[1]}
+    excluded=${p[2]}
 
     latest=$(echo "select status from measurements where rnode = $id order by timestamp desc limit 1" | sqlite3 nodes.db)
 
-    cat <<EOF
-<tr>
-  <td><a href="node-$id.html">$callsign</a></td>
-  <td><a href="http://stats.allstarlink.org/stats/$id">$id</a></td>
-  <td>$(format_value $latest)</td>
-</tr>
-EOF
+    echo "<tr>"
+    echo "  <td><a href=\"node-$id.html\">$callsign</a></td>"
+    echo "  <td><a href=\"http://stats.allstarlink.org/stats/$id\">$id</a></td>"
 
+    if [ "$excluded" == "1" ]; then
+        echo "<td><span style=\"color: orange\">Excluded</span>"
+    else
+        echo "  <td>$(format_value $latest)</td>"
+    fi
+    echo "</tr>"
 done < nodes.txt
-rm nodes.txt
+#rm nodes.txt

@@ -10,7 +10,7 @@ create table if not exists measurements (
 create table if not exists nodes (
   id integer primary key,
   callsign varchar(64),
-  comment text
+  inbound_excluded tinyint default 0
 ); 
 
 create table if not exists node_count (
@@ -19,3 +19,6 @@ create table if not exists node_count (
        link_count integer,
        primary key(timestamp, node)
 );
+
+update nodes set inbound_excluded = 1 where callsign = 'GB3KH';
+update nodes set inbound_excluded = 1 where callsign = 'MB7IJT';
