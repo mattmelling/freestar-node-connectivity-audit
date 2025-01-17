@@ -123,7 +123,7 @@ dist/node-%.html: templates/node.html.m4 dist/node-connectivity-%.png
 # Index page
 #
 
-all_nodelist.html:
+all_nodelist.html: $(NODEDB)
 	./nodelist.sh > $@
 
 freestar_nodelist.html:
