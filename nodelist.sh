@@ -33,4 +33,4 @@ while read l; do
     fi
     echo "</tr>"
 done < nodes.txt
-#rm nodes.txt
+rm nodes.txt
