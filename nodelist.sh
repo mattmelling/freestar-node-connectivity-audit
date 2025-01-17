@@ -8,13 +8,19 @@ format_value () {
     fi
 }
 
-sqlite3 nodes.db "select id, callsign, inbound_excluded from nodes order by callsign asc;" > nodes.txt
-while read l; do
-    p=(${l//|/ })
+qrz_link () {
+    echo "<a href=\"https://www.qrz.com/db/$1\">$1</a>"
+}
 
-    id=${p[0]}
-    callsign=${p[1]}
-    excluded=${p[2]}
+sqlite3 nodes.db "select id, callsign, inbound_excluded, location, keeper from nodes order by callsign asc;" > nodes.txt
+while read l; do
+    IFS="|" read -r -a p <<< "$l"
+
+    id="${p[0]}"
+    callsign="${p[1]}"
+    excluded="${p[2]}"
+    location="${p[3]}"
+    keeper="${p[4]}"
 
     latest=$(echo "select status from measurements where rnode = $id order by timestamp desc limit 1" | sqlite3 nodes.db)
 
@@ -31,6 +37,8 @@ while read l; do
     else
         echo "  <td>$(format_value $latest)</td>"
     fi
+    echo "  <td>$(qrz_link $keeper)</td>"
+    echo "  <td>$location</td>"
     echo "</tr>"
 done < nodes.txt
 rm nodes.txt

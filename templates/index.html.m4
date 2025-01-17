@@ -27,6 +27,8 @@ define(ALL_NODES, esyscmd(cat all_nodelist.html))
     <th>Callsign</th>
     <th>Node Number</th>
     <th>Accepts connections</th>
+    <th>Keeper</th>
+    <th>Location</th>
   </tr>
   syscmd(cat all_nodelist.html)
 </table>

@@ -10,7 +10,9 @@ create table if not exists measurements (
 create table if not exists nodes (
   id integer primary key,
   callsign varchar(64),
-  inbound_excluded tinyint default 0
+  inbound_excluded tinyint default 0,
+  keeper varchar(64),
+  location varchar(64)
 ); 
 
 create table if not exists node_count (
