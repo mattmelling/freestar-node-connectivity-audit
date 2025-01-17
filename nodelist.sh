@@ -22,8 +22,12 @@ while read l; do
     echo "  <td><a href=\"node-$id.html\">$callsign</a></td>"
     echo "  <td><a href=\"http://stats.allstarlink.org/stats/$id\">$id</a></td>"
 
-    if [ "$excluded" == "1" ]; then
-        echo "<td><span style=\"color: orange\">Excluded</span>"
+    if [ $latest -eq 0 ]; then
+        if [ $excluded -eq 1 ]; then
+            echo "  <td><span style=\"color: orange\">Excluded</span>"
+        else
+            echo "  <td>$(format_value $latest)</td>"
+        fi
     else
         echo "  <td>$(format_value $latest)</td>"
     fi
