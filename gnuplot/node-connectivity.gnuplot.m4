@@ -20,4 +20,4 @@ set ytics 1
 set key left bottom box opaque font ",10"
 
 set datafile separator ","
-plot 'node-connectivity-NODE_ID.csv' using 1:2 title 'CALLSIGN accepted incoming connection' with linespoints ls 1 pt 7 ps 1.5
+plot 'node-connectivity-NODE_ID.csv' using 1:2 title 'CALLSIGN accepted incoming connection' with lines ls 1

@@ -8,6 +8,10 @@ format_value () {
     fi
 }
 
+format_avg() {
+    echo "<span style=\"color: #cccccc\">(${1}%)</span>"
+}
+
 qrz_link () {
     echo "<a href=\"https://www.qrz.com/db/$1\">$1</a>"
 }
@@ -22,7 +26,11 @@ while read l; do
     location="${p[3]}"
     keeper="${p[4]}"
 
-    latest=$(echo "select status from measurements where rnode = $id order by timestamp desc limit 1" | sqlite3 nodes.db)
+    result=$(echo "select case when avg(status) > 0 then 1 else 0 end as st, avg(status) as st_avg from measurements where rnode = $id order by timestamp desc limit 5" | sqlite3 nodes.db)
+    IFS="|" read -r -a a <<< "$result"
+    latest="${a[0]}"
+    avg="$(echo "a = ${a[1]} * 100; scale=2; a * 1" | bc)"
+    avg="$(printf %.0f $avg)"
 
     echo "<tr>"
     echo "  <td><a href=\"node-$id.html\">$callsign</a></td>"
@@ -32,10 +40,10 @@ while read l; do
         if [ $excluded -eq 1 ]; then
             echo "  <td><span style=\"color: orange\">Excluded</span>"
         else
-            echo "  <td>$(format_value $latest)</td>"
+            echo "  <td>$(format_value $latest) $(format_avg $avg)</td>"
         fi
     else
-        echo "  <td>$(format_value $latest)</td>"
+        echo "  <td>$(format_value $latest) $(format_avg $avg)</td>"
     fi
     echo "  <td>$(qrz_link $keeper)</td>"
     echo "  <td>$location</td>"

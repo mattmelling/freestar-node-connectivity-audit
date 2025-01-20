@@ -7,6 +7,7 @@
     in {
       devShell.x86_64-linux = pkgs.mkShell {
         buildInputs = with pkgs; [
+          bc
           gnuplot
           sqlite
         ];
