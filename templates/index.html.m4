@@ -22,14 +22,16 @@ define(ALL_NODES, esyscmd(cat all_nodelist.html))
 <div style="text-align: center">
      <img src="nodes-by-status.png" />
 </div>
-<table cellpadding="3" cellspacing="3">
-  <tr>
-    <th>Callsign</th>
-    <th>Node Number</th>
-    <th>Accepts connections</th>
-    <th>Keeper</th>
-    <th>Location</th>
-  </tr>
-  syscmd(cat all_nodelist.html)
-</table>
+<div style="margin-top: 20px">
+    <table cellpadding="3" cellspacing="3" style="margin: 0 auto">
+        <tr>
+            <th>Callsign</th>
+            <th>Node Number</th>
+            <th>Accepts connections</th>
+            <th>Keeper</th>
+            <th>Location</th>
+        </tr>
+        syscmd(cat all_nodelist.html)
+    </table>
+</div>
 include(templates/footer.html)
