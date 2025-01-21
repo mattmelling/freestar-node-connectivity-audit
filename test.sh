@@ -6,7 +6,7 @@ ASTERISK="sudo asterisk -rx"
 
 $ASTERISK "rpt fun $LOCAL *3$NODE"
 sleep 5
-RESULT=$($ASTERISK "rpt nodes $LOCAL" | grep -E "T$NODE[, ]" | wc -l)
+RESULT=$($ASTERISK "rpt nodes $LOCAL" | grep -E "(T$NODE,|T$NODE$)" | wc -l)
 sleep 5
 $ASTERISK "rpt fun $LOCAL *1$NODE"
 
