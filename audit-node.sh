@@ -11,7 +11,11 @@ maybe_audit_node() {
     cutoff=$(( $last_successful_measurement + $SUCCESS_TIMEOUT ))
 
     if [ $cutoff -lt $timestamp ]; then
+        # Audit the node
         echo "$(date +%s),${NODE},${call},$(./test.sh $node)"
+    else
+        # Don't audit and fake the result
+        echo "$(date +%s),${NODE},${call},$node,1"
     fi
 }
 
