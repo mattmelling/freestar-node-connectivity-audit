@@ -16,6 +16,7 @@ define(ALL_NODES, esyscmd(cat all_nodelist.html))
 <h2>Total Gateway & Repeater Node Connections</h2>
 <div style="text-align: center">
      <img src="node-links.png" />
+     <img src="node-links-48.png" />
      <img src="nodes-count.png" />
 </div>
 <h2>Gateway & Repeater Nodes by Status</h2>

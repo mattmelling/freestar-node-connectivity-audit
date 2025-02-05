@@ -53,9 +53,33 @@ node-links-lines.gnuplot: freestar-nodes-lines.sh
 node-links.gnuplot: gnuplot/node-links.gnuplot.m4 node-links-lines.gnuplot
 	m4 < gnuplot/node-links.gnuplot.m4 > $@
 
-dist/node-links.png: node-links.gnuplot all-node-link-count.csv $(foreach node,$(NODES),link-count-$(node).csv)
+dist/node-links.png: node-links.gnuplot all-node-link-count.csv $(foreach node,$(NODES),link-count-$(node).csv) node-links-lines.gnuplot
 	mkdir -p dist
 	gnuplot < node-links.gnuplot
+	mv node-links.png $@
+
+#
+# Node counts (48 hours)
+#
+
+all-node-link-count-48.csv: sql/all-node-link-count-48.sql $(NODEDB)
+	sqlite3 -csv $(NODEDB) < sql/all-node-link-count-48.sql > $@
+
+node-links-48.gnuplot: gnuplot/node-links-48.gnuplot.m4 node-links-lines-48.gnuplot
+	m4 < gnuplot/node-links-48.gnuplot.m4 > $@
+
+link-count-%-48.sql: sql/link-count-48.sql.m4
+	m4 -D NODE=$* < sql/link-count-48.sql.m4 > $@
+
+link-count-%-48.csv: link-count-%-48.sql $(NODEDB)
+	sqlite3 -csv $(NODEDB) < link-count-$*-48.sql > $@
+
+node-links-lines-48.gnuplot: freestar-nodes-lines.sh
+	NODES="$(NODES)" ./freestar-nodes-lines.sh link-count -48 > $@
+
+dist/node-links-48.png: node-links-48.gnuplot all-node-link-count-48.csv $(foreach node,$(NODES),link-count-$(node)-48.csv)
+	mkdir -p dist
+	gnuplot < node-links-48.gnuplot
 	mv node-links.png $@
 
 #
@@ -129,7 +153,7 @@ all_nodelist.html: $(NODEDB) nodelist.sh
 freestar_nodelist.html:
 	NODES="$(NODES)" ./freestar-nodelist.sh > $@
 
-dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/node-links.png $(NODEDB) all_nodelist.html freestar_nodelist.html
+dist/index.html: dist/nodes-by-status.png dist/nodes-count.png templates/index.html.m4 dist/node-links.png $(NODEDB) all_nodelist.html freestar_nodelist.html dist/node-links-48.png
 	m4 -D NODEDB="$(NODEDB)" -D NODES="$(NODES)" < templates/index.html.m4 > $@
 
 .PHONY: report
